@@ -12,7 +12,6 @@ local M = {
     { key = "<c-e>", action = "edit_in_place" },
     { key = "O", action = "edit_no_picker" },
     { key = { "<2-rightmouse>", "<c-]>", "<cr>", "cd" }, action = "cd" },
-    { key = "<c-o>", action = "cd_parent" },
     { key = "<c-v>", action = "vsplit" },
     { key = "<c-x>", action = "split" },
     { key = "<c-t>", action = "tabnew" },
@@ -35,11 +34,11 @@ local M = {
     { key = "y", action = "copy" },
     { key = "p", action = "paste" },
     { key = "yn", action = "copy_name" },
-    { key = "yp", action = "copy_path" },
-    { key = "gy", action = "copy_absolute_path" },
+    { key = "ypr", action = "copy_path" },
+    { key = "ypa", action = "copy_absolute_path" },
     { key = "[c", action = "prev_git_item" },
     { key = "]c", action = "next_git_item" },
-    { key = "-", action = "dir_up" },
+    { key = { "<c-o>", "-" }, action = "dir_up" },
     { key = "s", action = "system_open" },
     { key = "q", action = "close" },
     { key = "?", action = "toggle_help" },
@@ -124,9 +123,6 @@ function M.on_keypress(action)
     return
   elseif action == "go_home" then
     require("nvim-tree.actions.change-dir").fn(os.getenv( "HOME" ))
-    return
-  elseif action == "cd_parent" then
-    require("nvim-tree.actions.change-dir").fn(string.match(require("nvim-tree.core").get_cwd(),"^(.+)/"))
     return
   end
 
