@@ -8,12 +8,11 @@ local nvim_tree_callback = require("nvim-tree.config").nvim_tree_callback
 
 local M = {
   mappings = {
-    { key = { "l", "<2-leftmouse>" }, action = "edit" },
+    { key = { "l" }, action = "edit" },
     { key = "<c-e>", action = "edit_in_place" },
     { key = "O", action = "edit_no_picker" },
-    { key = { "<2-rightmouse>", "<c-]>", "<cr>", "cd" }, action = "cd" },
+    { key = { "<c-]>", "cd" }, action = "cd" },
     { key = "<c-v>", action = "vsplit" },
-    { key = "<c-x>", action = "split" },
     { key = "<c-t>", action = "tabnew" },
     { key = "<", action = "prev_sibling" },
     { key = ">", action = "next_sibling" },
@@ -109,21 +108,22 @@ function M.on_keypress(action)
 
   if action == "preview" then
     if node.name == ".." then
-      return
+      return require("nvim-tree.actions.change-dir").fn ".."
     end
     if not node.nodes then
       return require("nvim-tree.actions.open-file").fn("preview", node.absolute_path)
     end
-  elseif node.name == ".." then
-    return require("nvim-tree.actions.change-dir").fn ".."
   elseif action == "cd" then
     if node.nodes ~= nil then
       require("nvim-tree.actions.change-dir").fn(lib.get_last_group_node(node).absolute_path)
     end
     return
   elseif action == "go_home" then
-    require("nvim-tree.actions.change-dir").fn(os.getenv( "HOME" ))
-    return
+    return require("nvim-tree.actions.change-dir").fn(os.getenv( "HOME" ))
+  end
+
+  if node.name == ".." then
+    return require("nvim-tree.actions.change-dir").fn ".."
   end
 
   if node.link_to and not node.nodes then
